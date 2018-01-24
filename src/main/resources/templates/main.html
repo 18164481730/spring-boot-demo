@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+    <title>Spring Boot测试系统</title>
+    <script type="text/javascript">
+        $(function(){
+            $('#profile-feed-1').slimScroll({
+                height: '250px',
+                alwaysVisible : true
+            });
+
+            //单击快捷方式
+            $("#fastMenuDiv").on("click","a.menu",function(){
+                var url=$(this).attr("id");
+                var id=$(this).attr("value");
+                if(id && url){
+                    parent.addTabs({id:id, title: $(this).find(".spName").text(), url: url, close: true});
+                }
+            })
+        });
+    </script>
+</head>
+
+<body >
+<div layout:fragment="content" th:remove="tag">
+<div class="row">
+    <div class="col-xs-12">
+        <div class="widget-box">
+            <div class="widget-header widget-header-small">
+                <h4><i class="fa fa-user orange"></i>个人信息</h4>
+            </div>
+            <div class="widget-body">
+                <div class="widget-body-inner" style="display: block;">
+                    <div class="widget-main">
+                        <div>
+                            <div class="row">
+                                <div class="col-xs-7">
+                                    <h3>您好，欢迎登录Spring Boot测试系统</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div layout:fragment="js" th:remove="tag">
+</div>
+</body>
+</html>

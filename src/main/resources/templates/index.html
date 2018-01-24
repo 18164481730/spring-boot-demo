@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" layout:decorator="layout">
+<head>
+    <title>Spring Boot测试系统</title>
+    <style>
+        .logo{
+            width: 30px;
+            height:30px;
+            padding: 0px;
+            margin-top: -4px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(function() {
+            //初始化查询菜单
+            // initData();
+            $("#menus").on("click", ".changeUrl", function() {
+                var id = $(this).attr("id");
+                var url = $(this).attr("value");
+                if(id && url){
+                    addTabs({
+                        id:id,
+                        title:$(this).text(),
+                        url:url,
+                        close:true
+                    });
+                }
+            });
+            $(".nav-tabs").on("click", ".close-tab", function() {
+                id = $(this).prev("a").attr("aria-controls");
+                closeTab(id);
+            });
+
+            $("#mainIframe").load(function(){
+                var mainheight =$(this).contents().find("body").height();
+                if(mainheight<400){
+                    mainheight = 400;
+                }
+                $(this).height(mainheight);
+            });
+
+            //退出操作
+            $("#outLogin").click(function(){
+                $.ajax({
+                    url: "/loginOut",
+                    cache: false,
+                    dataType: 'json',
+                    type: 'get',
+                    success: function (json) {
+                        try {
+                            window.location.href = "/";
+                        } catch (e) {
+                            window.location.href = "/";
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert("报错了");
+                    }
+                });
+            });
+        });
+
+        //打开菜单
+        function changeUrl(url) {
+            clearFlash();
+            $("#mainFrame").attr("src","/" + url);
+        }
+        //清除iframe
+        function clearFlash() {
+            try {
+                //在iframe销毁前清理掉iframe中的内容（特别是flash）
+                $("#mainFrame").contents().find("body").empty();
+            } catch (e) {
+            }
+        }
+    </script>
+
+</head>
+<body>
+<div layout:fragment="content" th:remove="tag">
+<div class="navbar navbar-default" id="navbar">
+    <div class="navbar-container" id="navbar-container">
+        <div class="navbar-header pull-left">
+            <a th:href="@{/}"  class="navbar-brand" style="height: 45px;">
+                <small>
+                    <img class="logo"  th:src="@{/assets/images/logo.png}" />Java
+                </small>
+            </a>
+        </div>
+
+        <div class="navbar-header pull-right" role="navigation">
+            <ul class="nav ace-nav">
+                <li class="light-blue">
+                    <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                        <span class="user-info">
+                            <small>欢迎光临!</small>
+						</span>
+                        <i class="icon-caret-down"></i>
+                    </a>
+                    <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+                        <li><a href="#"> <i class="icon-cog"></i> 设置</a></li>
+                        <li><a href="#"> <i class="icon-user"></i> 个人资料</a></li>
+                        <li class="divider"></li>
+                        <li><a id="outLogin" href="#"> <i class="icon-off"></i>退出</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="main-container" id="main-container">
+
+    <div class="main-container-inner">
+        <a class="menu-toggler" id="menu-toggler" href="#"> <span class="menu-text"></span></a>
+        <div class="sidebar" id="sidebar">
+            <ul id="menus" class="nav nav-list">
+                <li>
+                    <a href="#" class="dropdown-toggle">
+                        <i class="icon-desktop"></i>
+                        <span class="menu-text">教程管理</span>
+                        <b class="arrow icon-angle-down"></b>
+                    </a>
+                    <ul class="submenu">
+                        <li>
+                            <a id="learn" value="book" class="changeUrl">
+                                <i class="icon-double-angle-right"></i>
+                                Java书籍
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <div class="sidebar-collapse" id="sidebar-collapse">
+                <i class="icon-double-angle-left"
+                   data-icon1="icon-double-angle-left"
+                   data-icon2="icon-double-angle-right"></i>
+            </div>
+        </div>
+        <div class="main-content">
+            <ul class="nav nav-tabs" role="tablist" style="height:34px">
+                <li role="presentation" class="active" style="margin-right: 4px;">
+                    <a href="#home" aria-controls="home" role="tab" data-toggle="tab"><i class="icon-home home-icon"></i>首页</a>
+                </li>
+            </ul>
+            <div class="tab-content page-content" style="margin-right: 5px;">
+                <div role="tabpanel" class="tab-pane active" id="home">
+                    <iframe id="mainIframe" th:src="@{/main}" scrolling="no" frameborder="0" width="100%" style="border: 0;height: 200px;"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div layout:fragment="js" th:remove="tag">
+</div>
+</body>
+</html>

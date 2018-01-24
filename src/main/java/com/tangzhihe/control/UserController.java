@@ -1,17 +1,14 @@
 package com.tangzhihe.control;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.tangzhihe.entity.User;
-import com.tangzhihe.service.UserService;
 import com.tangzhihe.util.MD5Util;
+import javax.servlet.http.HttpSession;
+import com.tangzhihe.service.UserService;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @Controller
@@ -20,7 +17,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    private static final Logger log = Logger.getLogger(UserController.class);// 日志文件
 
     /**
      * 登录
@@ -38,7 +34,6 @@ public class UserController {
             user.setPassword("");
         }
         User resultUser = userService.login(user);
-        log.info("request: user/login , user: " + user.toString());
         if (resultUser == null) {
             request.setAttribute("user", user);
             request.setAttribute("errorMsg", "请认真核对账号、密码！");
@@ -61,7 +56,6 @@ public class UserController {
     @RequestMapping("/logout")
     public String logout(HttpSession session) throws Exception {
         session.invalidate();
-        log.info("request: user/logout");
         return "redirect:login";
     }
 }
